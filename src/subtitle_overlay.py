@@ -1,29 +1,12 @@
-import signal
 import sys
+import signal
 import textwrap
 import threading
 import tkinter as tk
 import soundfile as sf
 from queue import Queue
+from config import *
 from utils.subtitle import *
-
-# Position of Subtitle, offset from bottom middle of screen
-OFFSET_X = 0
-OFFSET_Y = -200
-
-# The font size of subtitle text
-SUBTITLE_FONT_SIZE = 35
-
-# The color of subtitle text
-SUBTITLE_COLOR = "white"
-
-# The background color of your subtitles
-SUBTITLE_BG_COLOR = "black"
-
-# The color that will be considered transparent
-# Put the same value as SUBTITLE_BG_COLOR so background of subtitles will be transparent as well
-# Putting the same value as SUBTITLE_COLOR will cause your subtitles to be invisible
-SACRIFICIAL_COLOR = "black"
 
 
 def subtitle_updater(root, queue, label):

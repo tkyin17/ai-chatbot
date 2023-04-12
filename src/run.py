@@ -1,22 +1,21 @@
-import openai
-import winsound
 import sys
 import time
-import pyaudio
-import keyboard
 import wave
 import json
-from config import *
-from utils.translate import *
-from utils.TTS import *
-from utils.promptMaker import *
+import openai
+import pyaudio
+import winsound
+import keyboard
+from common.config import *
+from utils.voicevox import *
 from utils.subtitle import *
+from utils.translate import *
+from utils.prompt_maker import *
 
 # to help the CLI write unicode characters to the terminal
 sys.stdout = open(sys.stdout.fileno(), mode="w", encoding="utf8", buffering=1)
 
-# use your own API Key, you can get it from https://openai.com/. I place my API Key in a separate file called config.py
-openai.api_key = api_key
+openai.api_key = OPENAI_API_KEY
 
 conversation = []
 # Create a dictionary to hold the message data
@@ -25,15 +24,13 @@ history = {"history": conversation}
 mode = 0
 total_characters = 0
 chat = ""
-chat_now = ""
+transcribed_message = ""
 chat_prev = ""
 is_Speaking = False
 owner_name = "yin"
-blacklist = ["Nightbot", "streamelements"]
+
 
 # function to get the user's input audio
-
-
 def record_audio():
     CHUNK = 1024
     FORMAT = pyaudio.paInt16
@@ -63,30 +60,28 @@ def record_audio():
 
 
 # function to transcribe the user's audio
-
-
 def transcribe_audio(file):
-    global chat_now
+    global transcribed_message
     try:
         audio_file = open(file, "rb")
+
         # Translating the audio to English
         # transcript = openai.Audio.translate("whisper-1", audio_file)
+
         # Transcribe the audio to detected language
         transcript = openai.Audio.transcribe("whisper-1", audio_file)
-        chat_now = transcript.text
-        print("Question: " + chat_now)
-    except Exception as e:
-        print("Error transcribing audio: {0}".format(e))
+        transcribed_message = transcript.text
+        print("Question: " + transcribed_message)
+    except Exception as error:
+        print(f"error transcribing audio: {error}")
         return
 
-    result = owner_name + " said " + chat_now
-    conversation.append({"role": "user", "content": result})
+    result = owner_name + " said " + transcribed_message
+    conversation.append({"role": "user", "content": transcribed_message})
     openai_answer()
 
 
 # function to get an answer from OpenAI
-
-
 def openai_answer():
     global total_characters, conversation
 
@@ -98,14 +93,14 @@ def openai_answer():
             # print(len(conversation))
             conversation.pop(2)
             total_characters = sum(len(d["content"]) for d in conversation)
-        except Exception as e:
-            print("Error removing old messages: {0}".format(e))
+        except Exception as error:
+            print(f"error removing old messages: {error}")
 
     with open("conversation.json", "w", encoding="utf-8") as f:
         # Write the message data to the file in JSON format
         json.dump(history, f, indent=4)
 
-    prompt = getPrompt()
+    prompt = get_prompt()
 
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo", messages=prompt, max_tokens=128, temperature=1, top_p=0.9
@@ -117,8 +112,6 @@ def openai_answer():
 
 
 # translating is optional
-
-
 def translate_text(text):
     global is_Speaking
     # subtitle will act as subtitle for the viewer
@@ -133,13 +126,13 @@ def translate_text(text):
         # print("ID Answer: " + subtitle)
         print("JP Answer: " + tts)
         print("EN Answer: " + tts_en)
-    except Exception as e:
-        print("Error printing text: {0}".format(e))
+    except Exception as error:
+        print(f"error printing text: {error}")
         return
 
     # Choose between the available TTS engines
     # Japanese TTS
-    voicevox_tts(tts)
+    get_voicevox_tts(tts)
 
     # Generate subtitle
     generate_subtitle(text)
@@ -153,31 +146,29 @@ def translate_text(text):
 
 
 def preparation():
-    global conversation, chat_now, chat, chat_prev
+    global conversation, transcribed_message, chat, chat_prev
     while True:
         # If the assistant is not speaking, and the chat is not empty, and the chat is not the same as the previous chat
         # then the assistant will answer the chat
-        chat_now = chat
-        if is_Speaking == False and chat_now != chat_prev:
+        transcribed_message = chat
+        if is_Speaking == False and transcribed_message != chat_prev:
             # Saving chat history
-            conversation.append({"role": "user", "content": chat_now})
-            chat_prev = chat_now
+            conversation.append({"role": "user", "content": transcribed_message})
+            chat_prev = transcribed_message
             openai_answer()
         time.sleep(1)
 
 
 if __name__ == "__main__":
     try:
-        # You can change the mode to 1 if you want to record audio from your microphone
-        # or change the mode to 2 if you want to capture livechat from youtube
         mode = input("Mode (1-Mic): ")
-
         if mode == "1":
             print("Press and Hold Right Shift to record audio")
             while True:
                 if keyboard.is_pressed("RIGHT_SHIFT"):
                     record_audio()
                 else:
+                    # sleep to avoid infinite loops
                     time.sleep(0.5)
 
     except KeyboardInterrupt:
