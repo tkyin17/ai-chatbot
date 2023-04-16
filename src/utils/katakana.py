@@ -1,10 +1,7 @@
 import re
-import sys
 import MeCab
 import alkana
 import pandas as pd
-
-sys.stdout = open(sys.stdout.fileno(), mode="w", encoding="utf8", buffering=1)
 
 alpha_reg = re.compile(r"^[a-zA-Z]+$")
 
@@ -17,18 +14,18 @@ def katakana_converter(text: str) -> str:
     wakati = MeCab.Tagger("-Owakati")
     wakati_result = wakati.parse(text)
 
-    df = pd.DataFrame(wakati_result.split(" "), columns=["word"])
-    df = df[df["word"].str.isalpha() == True]
-    df["english_word"] = df["word"].apply(is_alpha)
-    df = df[df["english_word"] == True]
-    df["katakana"] = df["word"].apply(alkana.get_kana)
+    data_frame = pd.DataFrame(wakati_result.split(" "), columns=["word"])
+    data_frame = data_frame[data_frame["word"].str.isalpha() is True]
+    data_frame["english_word"] = data_frame["word"].apply(is_alpha)
+    data_frame = data_frame[data_frame["english_word"] is True]
+    data_frame["katakana"] = data_frame["word"].apply(alkana.get_kana)
 
-    dict_rep = dict(zip(df["word"], df["katakana"]))
+    dict_rep = dict(zip(data_frame["word"], data_frame["katakana"]))
 
     for word, read in dict_rep.items():
         try:
             text = text.replace(word, read)
-        except:
-            pass
+        except Exception as error:
+            print(f"error converting text to katakana: {error}")
 
     return text

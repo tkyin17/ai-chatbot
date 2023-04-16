@@ -1,11 +1,36 @@
-import sys
 import json
+import time
+import winsound
 import requests
 import googletrans
-
-sys.stdout = open(sys.stdout.fileno(), mode="w", encoding="utf8", buffering=1)
+from utils.voicevox import get_voicevox_tts
+from utils.subtitle import generate_subtitle
 
 DEEPLX_URL = "http://localhost:1188/translate"
+
+
+# translating is optional
+def translate_text(text):
+    # tts will be the string to be converted to audio
+    detected_language = detect_language_google(tts_en)
+    # tts = translate_google(text, f"{detect}", "JA")
+    tts = translate_deeplx(tts_en, f"{detected_language}", "JA")
+    tts_en = text
+    try:
+        # print("ID Answer: " + subtitle)
+        print("JP Answer: " + tts)
+        print("EN Answer: " + tts_en)
+    except Exception as error:
+        print(f"error translating text: {error}")
+        return
+
+    # Japanese TTS
+    get_voicevox_tts(tts)
+
+    # Generate subtitle
+    generate_subtitle(tts_en)
+
+    winsound.PlaySound("output.wav", winsound.SND_FILENAME)
 
 
 def translate_deeplx(
@@ -49,7 +74,7 @@ def translate_google(
         return
 
 
-def detect_google(text: str) -> str | None:
+def detect_language_google(text: str) -> str | None:
     try:
         translator = googletrans.Translator()
         result = translator.detect(text)

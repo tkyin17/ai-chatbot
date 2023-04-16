@@ -5,8 +5,18 @@ import threading
 import tkinter as tk
 import soundfile as sf
 from queue import Queue
-from config import *
+from os import getenv
+from dotenv import load_dotenv
 from utils.subtitle import *
+
+load_dotenv()
+
+OFFSET_X = int(getenv("OFFSET_X"))
+OFFSET_Y = int(getenv("OFFSET_Y"))
+SUBTITLE_FONT_SIZE = int(getenv("SUBTITLE_FONT_SIZE"))
+SUBTITLE_COLOR = getenv("SUBTITLE_COLOR")
+SUBTITLE_BG_COLOR = getenv("SUBTITLE_BG_COLOR")
+SACRIFICIAL_COLOR = getenv("SACRIFICIAL_COLOR")
 
 
 def subtitle_updater(root, queue, label):

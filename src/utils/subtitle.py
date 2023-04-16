@@ -1,10 +1,8 @@
 import os
 import time
 from queue import Queue
-from pathlib import Path
 
-FILE_NAME = "subtitle.txt"
-SUBTITLE_TXT_PATH = Path(__file__).resolve().parent.parent / f"artifacts\{FILE_NAME}"
+SUBTITLE_TXT_PATH = "src/artifacts/subtitle.txt"
 
 
 def generate_subtitle(text: str) -> str:
@@ -12,7 +10,7 @@ def generate_subtitle(text: str) -> str:
         try:
             outfile.write(text.strip('"'))
         except Exception as error:
-            print(f"error writing to {FILE_NAME}: {error}")
+            print(f"error writing to {SUBTITLE_TXT_PATH}: {error}")
 
 
 def read_subtitle() -> str:
@@ -21,7 +19,7 @@ def read_subtitle() -> str:
             text = infile.read()
             return text
         except Exception as error:
-            print(f"error reading from {FILE_NAME}: {error}")
+            print(f"error reading from {SUBTITLE_TXT_PATH}: {error}")
 
 
 def enqueue_subtitle(queue: Queue) -> None:

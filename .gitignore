@@ -1,5 +1,3 @@
 __pycache__/
-config.py
-output.txt
-input.wav
-output.wav
+src/artifacts/*
+.env

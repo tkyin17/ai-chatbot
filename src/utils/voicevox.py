@@ -1,14 +1,15 @@
-import os
-import sys
 import requests
 import urllib.parse
-from pathlib import Path
-from katakana import *
+from os import getenv
+from dotenv import load_dotenv
+from utils.katakana import *
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config import *
+load_dotenv()
 
-TTS_WAV_PATH = Path(__file__).resolve().parent.parent / f"artifacts\\tts.wav"
+TTS_WAV_PATH = "src/artifacts/tts.wav"
+USE_VOICEVOX_COLAB = getenv("USE_VOICEVOX_COLAB")
+VOICE_ID = getenv("VOICE_ID")
+
 
 if USE_VOICEVOX_COLAB:
     VOICEBOX_URL = "https://warm-parts-float-34-69-1-252.loca.lt"

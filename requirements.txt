@@ -9,3 +9,6 @@ PyAudio==0.2.11
 pytchat==0.5.5
 requests==2.28.2
 unidic==1.1.0
+langchain
+python-dotenv
+tiktoken
