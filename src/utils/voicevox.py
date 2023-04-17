@@ -6,10 +6,9 @@ from utils.katakana import *
 
 load_dotenv()
 
-TTS_WAV_PATH = "src/artifacts/tts.wav"
-USE_VOICEVOX_COLAB = getenv("USE_VOICEVOX_COLAB")
+USE_VOICEVOX_COLAB = getenv("USE_VOICEVOX_COLAB", "False").lower() in ("true", "1", "t")
 VOICE_ID = getenv("VOICE_ID")
-
+TTS_WAV_PATH = "src/artifacts/tts.wav"
 
 if USE_VOICEVOX_COLAB:
     VOICEBOX_URL = "https://warm-parts-float-34-69-1-252.loca.lt"
@@ -41,10 +40,3 @@ def get_voicevox_tts(text: str) -> None:
 
     with open(TTS_WAV_PATH, "wb") as outfile:
         outfile.write(request.content)
-
-
-if __name__ == "__main__":
-    # test if voicevox is running
-    print("Voicevox attempting to speak now...")
-    # get_voicevox_tts("私とお茶しない？えへへ")
-    print(TTS_WAV_PATH)

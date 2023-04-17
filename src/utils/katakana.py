@@ -15,9 +15,9 @@ def katakana_converter(text: str) -> str:
     wakati_result = wakati.parse(text)
 
     data_frame = pd.DataFrame(wakati_result.split(" "), columns=["word"])
-    data_frame = data_frame[data_frame["word"].str.isalpha() is True]
+    data_frame = data_frame[data_frame["word"].str.isalpha() == True]
     data_frame["english_word"] = data_frame["word"].apply(is_alpha)
-    data_frame = data_frame[data_frame["english_word"] is True]
+    data_frame = data_frame[data_frame["english_word"] == True]
     data_frame["katakana"] = data_frame["word"].apply(alkana.get_kana)
 
     dict_rep = dict(zip(data_frame["word"], data_frame["katakana"]))

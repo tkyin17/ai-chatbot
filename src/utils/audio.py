@@ -14,7 +14,7 @@ openai.api_key = OPENAI_API_KEY
 
 
 # function to get the user's input audio
-def record_audio() -> str:
+def record_and_transcribe_audio() -> str:
     CHUNK = 1024
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
