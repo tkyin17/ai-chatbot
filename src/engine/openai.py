@@ -1,13 +1,12 @@
-import sys
 import time
 import openai
 import keyboard
 from os import getenv
 from dotenv import load_dotenv
-from utils.prompt import get_identity
-from utils.audio import record_and_transcribe_audio, generate_audio, play_audio
-from utils.translate import translate_text
-from utils.vits import init_vits_model
+from modules.prompt import get_identity
+from modules.audio import record_and_transcribe_audio, generate_audio, play_audio
+from modules.translate import translate_text
+from vits.index import init_vits_model
 
 load_dotenv()
 

@@ -6,7 +6,7 @@ import keyboard
 from scipy.io import wavfile
 from os import getenv
 from dotenv import load_dotenv
-from utils.vits import vits
+from vits.index import vits
 
 load_dotenv()
 

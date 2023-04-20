@@ -2,7 +2,7 @@ import requests
 import urllib.parse
 from os import getenv
 from dotenv import load_dotenv
-from utils.katakana import *
+from modules.katakana import *
 
 load_dotenv()
 

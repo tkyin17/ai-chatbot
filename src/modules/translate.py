@@ -3,8 +3,8 @@ import json
 import winsound
 import requests
 import googletrans
-from utils.voicevox import get_voicevox_tts
-from utils.subtitle import generate_subtitle
+from modules.voicevox import get_voicevox_tts
+from modules.subtitle import generate_subtitle
 
 DEEPLX_URL = "http://localhost:1188/translate"
 TTS_WAV_PATH = "src/artifacts/tts.wav"

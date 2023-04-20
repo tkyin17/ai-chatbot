@@ -1,8 +1,10 @@
 from langchain.prompts import PromptTemplate
 
+IDENTITY_FILE_PATH = "src/character/identity.txt"
+
 
 def get_identity():
-    with open("src/prompts/identity.txt", "r", encoding="utf-8") as infile:
+    with open(IDENTITY_FILE_PATH, "r", encoding="utf-8") as infile:
         try:
             identity = infile.read()
             return identity
