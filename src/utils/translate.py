@@ -14,7 +14,7 @@ sys.stdout = open(sys.stdout.fileno(), mode="w", encoding="utf8", buffering=1)
 
 
 # translating is optional
-def translate_text(text):
+def translate_text(text) -> str:
     # tts will be the string to be converted to audio
     detected_language = detect_language_google(text)
     # tts = translate_google(text, f"{detect}", "JA")
@@ -27,14 +27,15 @@ def translate_text(text):
     except Exception as error:
         print(f"error translating text: {error}")
         return
-
     # Japanese TTS
-    get_voicevox_tts(tts)
+    # get_voicevox_tts(tts)
 
     # Generate subtitle
     generate_subtitle(tts_en)
 
-    winsound.PlaySound(TTS_WAV_PATH, winsound.SND_FILENAME)
+    return tts
+
+    # winsound.PlaySound(TTS_WAV_PATH, winsound.SND_FILENAME)
 
 
 def translate_deeplx(

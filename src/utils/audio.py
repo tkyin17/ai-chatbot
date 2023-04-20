@@ -1,14 +1,18 @@
 import wave
 import openai
 import pyaudio
+import winsound
 import keyboard
+from scipy.io import wavfile
 from os import getenv
 from dotenv import load_dotenv
+from utils.vits import vits
 
 load_dotenv()
 
 OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 INPUT_WAV_PATH = "src/artifacts/input.wav"
+TTS_WAV_PATH = "src/artifacts/tts.wav"
 
 openai.api_key = OPENAI_API_KEY
 
@@ -56,3 +60,12 @@ def transcribe_audio() -> str:
     except Exception as error:
         print(f"error transcribing audio: {error}")
         return
+
+
+def play_audio():
+    winsound.PlaySound(TTS_WAV_PATH, winsound.SND_FILENAME)
+
+
+def generate_audio(text):
+    status, audios, time = vits(text)
+    wavfile.write(TTS_WAV_PATH, audios[0], audios[1])

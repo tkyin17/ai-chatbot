@@ -5,8 +5,9 @@ import keyboard
 from os import getenv
 from dotenv import load_dotenv
 from utils.prompt import get_identity
-from utils.audio import record_and_transcribe_audio
+from utils.audio import record_and_transcribe_audio, generate_audio, play_audio
 from utils.translate import translate_text
+from utils.vits import init_vits_model
 
 load_dotenv()
 
@@ -39,6 +40,7 @@ def run_openai():
     try:
         global messages
         messages = initMessagesWithSystemPrompt()
+        init_vits_model()
         mode = input("Mode (1-Mic): ")
         if mode == "1":
             print("Press and Hold Right Shift to record audio")
@@ -46,7 +48,9 @@ def run_openai():
                 if keyboard.is_pressed("RIGHT_SHIFT"):
                     transcribed_text = record_and_transcribe_audio()
                     response_text = get_openai_response(transcribed_text)
-                    translate_text(response_text)
+                    translated_text = translate_text(response_text)
+                    generate_audio(translated_text)
+                    play_audio()
                 else:
                     # sleep to avoid infinite loops
                     time.sleep(0.5)
