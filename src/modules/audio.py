@@ -1,5 +1,4 @@
 import wave
-import openai
 import pyaudio
 import winsound
 import keyboard
@@ -7,18 +6,20 @@ from scipy.io import wavfile
 from os import getenv
 from dotenv import load_dotenv
 from vits.index import vits
+from faster_whisper import WhisperModel
 
 load_dotenv()
 
 OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 INPUT_WAV_PATH = "src/artifacts/input.wav"
 TTS_WAV_PATH = "src/artifacts/tts.wav"
+WHISPER_MODEL_PATH = "src/whisper_model"  # model is "small.en"
 
-openai.api_key = OPENAI_API_KEY
+whisper = WhisperModel(WHISPER_MODEL_PATH, device="cpu", compute_type="int8")
 
 
 # function to get the user's input audio
-def record_and_transcribe_audio() -> str:
+def record_audio() -> str:
     CHUNK = 1024
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
@@ -42,21 +43,17 @@ def record_and_transcribe_audio() -> str:
     wf.setframerate(RATE)
     wf.writeframes(b"".join(frames))
     wf.close()
-    return transcribe_audio()
 
 
 # function to transcribe the user's audio
 def transcribe_audio() -> str:
     try:
-        audio_file = open(INPUT_WAV_PATH, "rb")
-
-        # Translating the audio to English
-        # transcript = openai.Audio.translate("whisper-1", audio_file)
-
-        # Transcribe the audio to detected language
-        transcript = openai.Audio.transcribe("whisper-1", audio_file)
-        print("You: " + transcript.text)
-        return transcript.text
+        segment_generator, _ = whisper.transcribe(INPUT_WAV_PATH, beam_size=5)
+        transcript = ""
+        for segment in segment_generator:
+            transcript = transcript + segment.text
+        print("You: " + transcript)
+        return transcript
     except Exception as error:
         print(f"error transcribing audio: {error}")
         return

@@ -1,4 +1,5 @@
 __pycache__/
 src/artifacts/*
-G_953000.pth
+src/vits_model/G_953000.pth
+src/whisper_model/model.bin
 .env
