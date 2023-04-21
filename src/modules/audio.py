@@ -13,9 +13,9 @@ load_dotenv()
 OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 INPUT_WAV_PATH = "src/artifacts/input.wav"
 TTS_WAV_PATH = "src/artifacts/tts.wav"
-WHISPER_MODEL_PATH = "src/whisper_model"  # model is "small.en"
+WHISPER_MODEL_DIR = "src/whisper_model"  # model is "small.en"
 
-whisper = WhisperModel(WHISPER_MODEL_PATH, device="cpu", compute_type="int8")
+whisper = WhisperModel(WHISPER_MODEL_DIR, device="cpu", compute_type="int8")
 
 
 # function to get the user's input audio
@@ -33,7 +33,7 @@ def record_audio() -> str:
     while keyboard.is_pressed("RIGHT_SHIFT"):
         data = stream.read(CHUNK)
         frames.append(data)
-    print("Stopped recording.")
+    print("Stopped recording")
     stream.stop_stream()
     stream.close()
     p.terminate()

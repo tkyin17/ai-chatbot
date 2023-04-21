@@ -12,8 +12,8 @@ from vits.commons import intersperse
 #     torch_directml.device() if torch_directml.is_available() else "cpu"
 # )
 DEVICE = "cpu"
-MODEL_PATH = "src/voice_model/G_953000.pth"
-CONFIG_PATH = "src/voice_model/config.json"
+MODEL_PATH = "src/vits_model/G_953000.pth"
+CONFIG_PATH = "src/vits_model/config.json"
 
 hps_ms = None
 net_g_ms = None
