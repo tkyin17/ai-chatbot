@@ -1,10 +1,16 @@
 import time
+
+# import torch_directml
+# import torch
 from text import text_to_sequence
 from torch import no_grad, LongTensor
 from vits.utils import get_hparams_from_file, load_checkpoint
 from vits.models import SynthesizerTrn
 from vits.commons import intersperse
 
+# DEVICE = torch.device(
+#     torch_directml.device() if torch_directml.is_available() else "cpu"
+# )
 DEVICE = "cpu"
 MODEL_PATH = "src/model/G_953000.pth"
 CONFIG_PATH = "src/model/config.json"
@@ -31,8 +37,8 @@ def init_vits_model():
         hps_ms.train.segment_size // hps_ms.data.hop_length,
         n_speakers=hps_ms.data.n_speakers,
         **hps_ms.model,
-    ).to(DEVICE)
-    _ = net_g_ms.eval()
+    )
+    _ = net_g_ms.eval().to(DEVICE)
     speakers = hps_ms.speakers
     model, optimizer, learning_rate, epochs = load_checkpoint(
         MODEL_PATH, net_g_ms, None
