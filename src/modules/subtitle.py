@@ -27,8 +27,8 @@ def enqueue_subtitle(queue: Queue) -> None:
         if os.path.getsize(SUBTITLE_TXT_PATH):
             queue.put(read_subtitle())
             clear_subtitle()
-        else:
-            time.sleep(0.5)
+        # sleep to avoid infinite loops
+        time.sleep(0.5)
 
 
 def clear_subtitle():

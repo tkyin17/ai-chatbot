@@ -25,18 +25,18 @@ def get_voicevox_tts(text: str) -> None:
     params_encoded = urllib.parse.urlencode(
         {"text": katakana_text, "speaker": VOICE_ID}
     )
-    request = requests.post(f"{VOICEBOX_URL}/audio_query?{params_encoded}")
+    response = requests.post(f"{VOICEBOX_URL}/audio_query?{params_encoded}")
 
-    if request.status_code == 404:
+    if response.status_code == 404:
         print("Unable to reach Voicevox engine, please check that it is running.")
         return
 
     params_encoded = urllib.parse.urlencode(
         {"enable_interrogative_upspeak": True, "speaker": VOICE_ID}
     )
-    request = requests.post(
-        f"{VOICEBOX_URL}/synthesis?{params_encoded}", json=request.json()
+    response = requests.post(
+        f"{VOICEBOX_URL}/synthesis?{params_encoded}", json=response.json()
     )
 
     with open(TTS_WAV_PATH, "wb") as outfile:
-        outfile.write(request.content)
+        outfile.write(response.content)

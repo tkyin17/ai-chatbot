@@ -41,6 +41,10 @@ def translate_deeplx(
         url=DEEPLX_URL, headers={"Content-Type": "application/json"}, data=payload
     )
 
+    if response.status_code == 404:
+        print("Unable to reach DeepLx engine, please check that it is running.")
+        return
+
     # get the response data as a JSON object
     data = response.json()
 

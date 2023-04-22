@@ -3,11 +3,11 @@ import signal
 import textwrap
 import threading
 import tkinter as tk
-import soundfile as sf
-from queue import Queue
 from os import getenv
+from queue import Queue
 from dotenv import load_dotenv
-from utils.subtitle import *
+from librosa import get_duration
+from modules.subtitle import enqueue_subtitle
 
 load_dotenv()
 
@@ -18,9 +18,11 @@ SUBTITLE_COLOR = getenv("SUBTITLE_COLOR")
 SUBTITLE_BG_COLOR = getenv("SUBTITLE_BG_COLOR")
 SACRIFICIAL_COLOR = getenv("SACRIFICIAL_COLOR")
 
+TTS_WAV_PATH = "src/artifacts/tts.wav"
+
 
 def subtitle_updater(root, queue, label):
-    # Check if there is something new in the queue to display.
+    # Check if there is something new in the queue to display
     while not queue.empty():
         # destroy old label since new message inbound
         label.destroy()
@@ -37,7 +39,7 @@ def subtitle_updater(root, queue, label):
             bg=SUBTITLE_BG_COLOR,
         )
 
-        duration = get_tts_duration() + 500
+        duration = get_tts_duration()
 
         # hide root and destroy label after tts duration ends
         label.after(duration, root.withdraw)
@@ -52,8 +54,8 @@ def subtitle_updater(root, queue, label):
 
 
 def get_tts_duration():
-    f = sf.SoundFile("output.wav")
-    return int(f.frames / f.samplerate * 1000)
+    # get_duration returns the duration in seconds, convert to miliseconds
+    return int(get_duration(path=TTS_WAV_PATH) * 1000)
 
 
 def setup_overlay():
@@ -67,7 +69,7 @@ def setup_overlay():
     root.wm_attributes("-topmost", True)
     root.wm_attributes("-disabled", True)
 
-    # Sacrifice random color for transparency
+    # sacrifice random color for transparency
     root.wm_attributes("-transparentcolor", SACRIFICIAL_COLOR)
     root.config(bg=SACRIFICIAL_COLOR)
 
@@ -83,6 +85,7 @@ def close_app(*_):
 
 
 def start_app():
+    print("Starting subtitle overlay")
     # catch keyboard interrupt to stop main thread
     signal.signal(signal.SIGINT, close_app)
 

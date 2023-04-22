@@ -52,7 +52,7 @@ def transcribe_audio() -> str:
         transcript = ""
         for segment in segment_generator:
             transcript = transcript + segment.text
-        print("You: " + transcript)
+        print("You:" + transcript)
         return transcript
     except Exception as error:
         print(f"error transcribing audio: {error}")
