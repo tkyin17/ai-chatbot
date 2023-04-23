@@ -1,16 +1,21 @@
 import time
 
 # import torch_directml
+from os import getenv
+from dotenv import load_dotenv
 from text import text_to_sequence
 from torch import no_grad, LongTensor
 from vits.utils import get_hparams_from_file, load_checkpoint
 from vits.models import SynthesizerTrn
 from vits.commons import intersperse
 
+load_dotenv()
+
 # DEVICE = torch_directml.device() if torch_directml.is_available() else "cpu"
 DEVICE = "cpu"
 MODEL_PATH = "src/vits_model/G_953000.pth"
 CONFIG_PATH = "src/vits_model/config.json"
+VOICE_ID = int(getenv("VOICE_ID"))
 
 hps_ms = None
 net_g_ms = None
@@ -45,7 +50,7 @@ def init_vits_model():
 def vits(
     text,
     language=1,
-    speaker_id=324,
+    speaker_id=VOICE_ID,
     noise_scale=0.6,
     noise_scale_w=0.668,
     length_scale=1.2,

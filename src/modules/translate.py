@@ -1,3 +1,4 @@
+import re
 import sys
 import json
 import requests
@@ -11,8 +12,10 @@ sys.stdout = open(sys.stdout.fileno(), mode="w", encoding="utf8", buffering=1)
 
 
 def translate_text(text) -> str:
+    # deeplx has trouble translating strings with asterisks, convert them to parentheses
+    modified_text = re.sub(r"\*([^\*]*)\*", r"(\1)", text)
     # translate EN to JP
-    translated_text = translate_deeplx(text, "EN", "JA")
+    translated_text = translate_deeplx(modified_text, "EN", "JA")
     try:
         print("JP Answer: " + translated_text)
         print("EN Answer: " + text)

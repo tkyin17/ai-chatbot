@@ -1,11 +1,14 @@
-from engine.openai import run_openai
+# from adapter.openai import run_openai
+from adapter.langchain import run_langchain
 
-# from utils.langchain import run_langchain
-
-MODE = "openai"
+# openai
+# langchain
+ADAPTER = "langchain"
 
 if __name__ == "__main__":
-    if MODE == "openai":
-        run_openai()
-    # else:
-    #     run_langchain()
+    if ADAPTER == "langchain":
+        run_langchain()
+    # elif ADAPTER == "openai":
+    #     run_openai()
+    else:
+        print("ADAPTER was not specified")

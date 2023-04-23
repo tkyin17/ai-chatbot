@@ -1,6 +1,7 @@
 import time
 import openai
 import keyboard
+import traceback
 from os import getenv
 from dotenv import load_dotenv
 from modules.prompt import get_identity
@@ -10,15 +11,16 @@ from vits.index import init_vits_model
 
 load_dotenv()
 
+MODEL_NAME = getenv("MODEL_NAME")
 
-OPENAI_API_KEY = getenv("OPENAI_API_KEY")
-MODEL_NAME = "gpt-3.5-turbo"
-
-openai.api_key = OPENAI_API_KEY
 messages = []
 
 
-def initMessagesWithSystemPrompt():
+def init_openai():
+    openai.api_key = getenv("OPENAI_API_KEY")
+
+
+def init_system_prompt():
     return [{"role": "system", "content": get_identity()}]
 
 
@@ -26,20 +28,23 @@ def get_openai_response(input: str):
     global messages
     messages.append({"role": "user", "content": input})
     try:
-        completion = openai.ChatCompletion.create(model=MODEL_NAME, messages=messages)
+        completion = openai.ChatCompletion.create(
+            model=MODEL_NAME, messages=messages, max_tokens=128, temperature=1
+        )
         response = completion.choices[0].message.content
         messages.append({"role": "assistant", "content": response})
         return response
     except:
         print("token limit exceeded, clearing messages list and restarting")
-        messages = initMessagesWithSystemPrompt()
+        messages = init_system_prompt()
 
 
 def run_openai():
     try:
         global messages
-        messages = initMessagesWithSystemPrompt()
         init_vits_model()
+        init_openai()
+        messages = init_system_prompt()
         mode = input("Mode (1-Mic): ")
         if mode == "1":
             print("Press and Hold Right Shift to record audio")
@@ -57,4 +62,4 @@ def run_openai():
     except KeyboardInterrupt:
         print("Stopped")
     except Exception as error:
-        print(f"an error has occurred: {error}")
+        print(f"an error has occurred: {error}\n{traceback.format_exc()}")
