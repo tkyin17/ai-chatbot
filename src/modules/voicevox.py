@@ -8,7 +8,7 @@ load_dotenv()
 
 USE_VOICEVOX_COLAB = getenv("USE_VOICEVOX_COLAB", "False").lower() in ("true", "1", "t")
 VOICE_ID = getenv("VOICE_ID")
-TTS_WAV_PATH = "src/artifacts/tts.wav"
+TTS_WAV_PATH = "src/tts.wav"
 
 if USE_VOICEVOX_COLAB:
     VOICEBOX_URL = "https://warm-parts-float-34-69-1-252.loca.lt"

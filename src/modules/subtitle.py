@@ -2,7 +2,7 @@ import os
 import time
 from queue import Queue
 
-SUBTITLE_TXT_PATH = "src/artifacts/subtitle.txt"
+SUBTITLE_TXT_PATH = "src/subtitle.txt"
 
 
 def generate_subtitle(text: str) -> str:

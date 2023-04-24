@@ -11,8 +11,8 @@ from faster_whisper import WhisperModel
 load_dotenv()
 
 OPENAI_API_KEY = getenv("OPENAI_API_KEY")
-INPUT_WAV_PATH = "src/artifacts/input.wav"
-TTS_WAV_PATH = "src/artifacts/tts.wav"
+INPUT_WAV_PATH = "src/input.wav"
+TTS_WAV_PATH = "src/tts.wav"
 WHISPER_MODEL_DIR = "src/whisper_model"  # model is "small.en"
 
 whisper = WhisperModel(WHISPER_MODEL_DIR, device="cpu", compute_type="int8")

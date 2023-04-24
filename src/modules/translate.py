@@ -5,7 +5,7 @@ import requests
 from modules.subtitle import generate_subtitle
 
 DEEPLX_URL = "http://localhost:1188/translate"
-TTS_WAV_PATH = "src/artifacts/tts.wav"
+TTS_WAV_PATH = "src/tts.wav"
 
 # to help the CLI write unicode characters to the terminal
 sys.stdout = open(sys.stdout.fileno(), mode="w", encoding="utf8", buffering=1)

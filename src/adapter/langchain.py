@@ -31,7 +31,7 @@ def init_conversation_chain():
         return_messages=True,
         k=5,
     )
-    return ConversationChain(llm=llm, memory=memory, prompt=prompt, verbose=True)
+    return ConversationChain(llm=llm, memory=memory, prompt=prompt)
 
 
 def get_langchain_response(

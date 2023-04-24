@@ -18,7 +18,7 @@ SUBTITLE_COLOR = getenv("SUBTITLE_COLOR")
 SUBTITLE_BG_COLOR = getenv("SUBTITLE_BG_COLOR")
 SACRIFICIAL_COLOR = getenv("SACRIFICIAL_COLOR")
 
-TTS_WAV_PATH = "src/artifacts/tts.wav"
+TTS_WAV_PATH = "src/tts.wav"
 
 
 def subtitle_updater(root, queue, label):
