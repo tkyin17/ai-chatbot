@@ -1,8 +1,11 @@
-import os
 import time
+from os import getenv, path
+from dotenv import load_dotenv
 from queue import Queue
 
-SUBTITLE_TXT_PATH = "src/subtitle.txt"
+load_dotenv()
+
+SUBTITLE_TXT_PATH = getenv("SUBTITLE_TXT_PATH")
 
 
 def generate_subtitle(text: str) -> str:
@@ -24,7 +27,7 @@ def read_subtitle() -> str:
 
 def enqueue_subtitle(queue: Queue) -> None:
     while True:
-        if os.path.getsize(SUBTITLE_TXT_PATH):
+        if path.getsize(SUBTITLE_TXT_PATH):
             queue.put(read_subtitle())
             clear_subtitle()
         # sleep to avoid infinite loops

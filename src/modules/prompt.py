@@ -1,3 +1,5 @@
+from os import getenv
+from dotenv import load_dotenv
 from langchain.prompts import (
     ChatPromptTemplate,
     SystemMessagePromptTemplate,
@@ -6,11 +8,13 @@ from langchain.prompts import (
     AIMessagePromptTemplate,
 )
 
-IDENTITY_FILE_PATH = "src/character/identity.txt"
+load_dotenv()
+
+IDENTITY_TXT_PATH = getenv("IDENTITY_TXT_PATH")
 
 
 def get_identity():
-    with open(IDENTITY_FILE_PATH, "r", encoding="utf-8") as infile:
+    with open(IDENTITY_TXT_PATH, "r", encoding="utf-8") as infile:
         try:
             return infile.read()
         except Exception as error:

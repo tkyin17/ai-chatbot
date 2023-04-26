@@ -8,13 +8,18 @@ from langchain.memory import ConversationBufferWindowMemory
 from langchain.chat_models import ChatOpenAI
 from modules.prompt import get_prompt
 from modules.translate import translate_text
-from modules.audio import record_audio, transcribe_audio, generate_audio, play_audio
-from vits.index import init_vits_model
+from vits.index import init_vits_model, generate_audio
+from modules.audio import (
+    record_audio,
+    transcribe_audio,
+    play_audio,
+    init_recorder,
+)
 
 load_dotenv()
 
-OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 MODEL_NAME = getenv("MODEL_NAME")
+OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 
 
 def init_conversation_chain():
@@ -22,7 +27,6 @@ def init_conversation_chain():
     llm = ChatOpenAI(
         model_name=MODEL_NAME,
         openai_api_key=OPENAI_API_KEY,
-        max_tokens=128,
         temperature=1,
     )
     memory = ConversationBufferWindowMemory(
@@ -44,13 +48,14 @@ def get_langchain_response(
 def run_langchain():
     try:
         init_vits_model()
+        recorder = init_recorder()
         converstation_chain = init_conversation_chain()
         mode = input("Mode (1-Mic): ")
         if mode == "1":
             print("Press and Hold Right Shift to record audio")
             while True:
                 if keyboard.is_pressed("RIGHT_SHIFT"):
-                    record_audio()
+                    record_audio(recorder)
                     transcribed_text = transcribe_audio()
                     response_text = get_langchain_response(
                         transcribed_text, converstation_chain
@@ -63,5 +68,7 @@ def run_langchain():
                     time.sleep(0.5)
     except KeyboardInterrupt:
         print("Stopped")
+        # call terminate() to clear PortAudio resources
+        recorder.terminate()
     except Exception as error:
         print(f"an error has occurred: {error}\n{traceback.format_exc()}")

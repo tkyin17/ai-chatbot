@@ -1,7 +1,6 @@
 import time
-
-# import torch_directml
 from os import getenv
+from scipy.io import wavfile
 from dotenv import load_dotenv
 from text import text_to_sequence
 from torch import no_grad, LongTensor
@@ -11,11 +10,11 @@ from vits.commons import intersperse
 
 load_dotenv()
 
-# DEVICE = torch_directml.device() if torch_directml.is_available() else "cpu"
-DEVICE = "cpu"
-MODEL_PATH = "src/vits_model/G_953000.pth"
-CONFIG_PATH = "src/vits_model/config.json"
-VOICE_ID = int(getenv("VOICE_ID"))
+DEVICE = getenv("DEVICE")
+VITS_MODEL_PATH = getenv("VITS_MODEL_PATH")
+VITS_CONFIG_PATH = getenv("VITS_CONFIG_PATH")
+TTS_WAV_PATH = getenv("TTS_WAV_PATH")
+SPEAKER_ID = int(getenv("SPEAKER_ID"))
 
 hps_ms = None
 net_g_ms = None
@@ -32,7 +31,7 @@ def get_text(text, hps):
 def init_vits_model():
     global DEVICE, hps_ms, net_g_ms
 
-    hps_ms = get_hparams_from_file(CONFIG_PATH)
+    hps_ms = get_hparams_from_file(VITS_CONFIG_PATH)
     net_g_ms = SynthesizerTrn(
         len(hps_ms.symbols),
         hps_ms.data.filter_length // 2 + 1,
@@ -43,14 +42,19 @@ def init_vits_model():
     _ = net_g_ms.eval().to(DEVICE)
     speakers = hps_ms.speakers
     model, optimizer, learning_rate, epochs = load_checkpoint(
-        MODEL_PATH, net_g_ms, None
+        VITS_MODEL_PATH, net_g_ms, None
     )
+
+
+def generate_audio(text):
+    status, audios, time = vits(text)
+    wavfile.write(TTS_WAV_PATH, audios[0], audios[1])
 
 
 def vits(
     text,
     language=1,
-    speaker_id=VOICE_ID,
+    speaker_id=SPEAKER_ID,
     noise_scale=0.6,
     noise_scale_w=0.668,
     length_scale=1.2,
@@ -61,8 +65,8 @@ def vits(
     if not len(text):
         return "输入文本不能为空！", None, None
     text = text.replace("\n", " ").replace("\r", "").replace(" ", "")
-    if len(text) > 200:
-        return f"输入文字过长！{len(text)}>100", None, None
+    # if len(text) > 200:
+    #     return f"输入文字过长！{len(text)}>100", None, None
     if language == 0:
         text = f"[ZH]{text}[ZH]"
     elif language == 1:
