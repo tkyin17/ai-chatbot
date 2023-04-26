@@ -9,11 +9,6 @@ from vits.index import init_vits_model, generate_audio
 from modules.prompt import get_prompt
 from modules.translate import translate_text
 from modules.transcribe import transcribe_audio
-from modules.audio import (
-    record_audio,
-    play_audio,
-    init_recorder,
-)
 
 load_dotenv()
 
@@ -46,6 +41,11 @@ def get_langchain_response(
 
 def run_langchain():
     import keyboard
+    from modules.audio import (
+        record_audio,
+        play_audio,
+        init_recorder,
+    )
 
     try:
         init_vits_model()
