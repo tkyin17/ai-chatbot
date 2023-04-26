@@ -14,7 +14,7 @@ DEVICE = getenv("DEVICE")
 VITS_MODEL_PATH = getenv("VITS_MODEL_PATH")
 VITS_CONFIG_PATH = getenv("VITS_CONFIG_PATH")
 TTS_WAV_PATH = getenv("TTS_WAV_PATH")
-SPEAKER_ID = int(getenv("SPEAKER_ID"))
+SPEAKER_ID = getenv("SPEAKER_ID")
 
 hps_ms = None
 net_g_ms = None
@@ -53,8 +53,8 @@ def generate_audio(text, speaker_id: int = 324):
 
 def vits(
     text,
+    speaker_id: int,
     language=1,
-    speaker_id=SPEAKER_ID,
     noise_scale=0.6,
     noise_scale_w=0.668,
     length_scale=1.2,
