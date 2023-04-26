@@ -1,4 +1,3 @@
-import time
 import json
 import traceback
 from os import getenv
