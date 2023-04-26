@@ -15,7 +15,7 @@ sys.stdout = open(sys.stdout.fileno(), mode="w", encoding="utf8", buffering=1)
 translator = deepl.Translator(DEEPL_AUTH_TOKEN)
 
 
-def translate_text(text) -> str:
+def translate_text(text, create_subtitles=False) -> str:
     try:
         # deepl has trouble translating strings with asterisks, convert them to parentheses
         modified_text = re.sub(r"\*([^\*]*)\*", r"(\1)", text)
@@ -27,8 +27,8 @@ def translate_text(text) -> str:
         katakana_text = katakana_converter(translated_text)
         print("JP Answer: " + katakana_text)
         print("EN Answer: " + text)
-        # create EN subtitles
-        generate_subtitle(text)
+        if create_subtitles:
+            generate_subtitle(text)
         return katakana_text
     except Exception as error:
         print(f"error translating text: {error}")
