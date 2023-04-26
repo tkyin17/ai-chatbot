@@ -1,5 +1,5 @@
 import wave
-import pyaudio
+
 import winsound
 import keyboard
 from os import getenv
@@ -13,8 +13,7 @@ INPUT_WAV_PATH = getenv("INPUT_WAV_PATH")
 TTS_WAV_PATH = getenv("TTS_WAV_PATH")
 WHISPER_MODEL_DIR = getenv("WHISPER_MODEL_DIR")  # model is "small.en"
 DEVICE = getenv("DEVICE")
-
-FORMAT = pyaudio.paInt16
+FORMAT = None
 CHUNK = 1024
 CHANNELS = 1
 RATE = 44100
@@ -23,12 +22,17 @@ whisper = WhisperModel(WHISPER_MODEL_DIR, device=DEVICE, compute_type="int8")
 
 
 def init_recorder():
+    import pyaudio
+
+    global FORMAT
+    FORMAT = pyaudio.paInt16
+
     return pyaudio.PyAudio()
 
 
 # function to get the user's input audio
-def record_audio(p: pyaudio.PyAudio) -> str:
-    stream = p.open(
+def record_audio(recorder) -> str:
+    stream = recorder.open(
         format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK
     )
     frames = []
@@ -41,7 +45,7 @@ def record_audio(p: pyaudio.PyAudio) -> str:
     stream.close()
     wf = wave.open(INPUT_WAV_PATH, "wb")
     wf.setnchannels(CHANNELS)
-    wf.setsampwidth(p.get_sample_size(FORMAT))
+    wf.setsampwidth(recorder.get_sample_size(FORMAT))
     wf.setframerate(RATE)
     wf.writeframes(b"".join(frames))
     wf.close()
