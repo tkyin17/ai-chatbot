@@ -1,5 +1,4 @@
 import time
-import keyboard
 import traceback
 from os import getenv
 from dotenv import load_dotenv
@@ -46,6 +45,8 @@ def get_langchain_response(
 
 
 def run_langchain():
+    import keyboard
+
     try:
         init_vits_model()
         recorder = init_recorder()
