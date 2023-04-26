@@ -3,4 +3,4 @@ This project is inspired by
 * https://github.com/SociallyIneptWeeb/LanguageLeapAI
 * https://github.com/Eerrly/VITSAIChatVtube
 
-This project can be run as a server in Google Colab to  handle audio transcription, gpt generation, text translation, and vits voice synthesis.
+Audio transcription, gpt response generation, text translation, and vits voice synthesis can be offloaded to Google Colab and ran as a server.
