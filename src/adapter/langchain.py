@@ -6,12 +6,12 @@ from dotenv import load_dotenv
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationBufferWindowMemory
 from langchain.chat_models import ChatOpenAI
+from vits.index import init_vits_model, generate_audio
 from modules.prompt import get_prompt
 from modules.translate import translate_text
-from vits.index import init_vits_model, generate_audio
+from modules.transcribe import transcribe_audio
 from modules.audio import (
     record_audio,
-    transcribe_audio,
     play_audio,
     init_recorder,
 )

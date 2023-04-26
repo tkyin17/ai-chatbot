@@ -6,7 +6,7 @@ from flask_cors import CORS
 from flask import Flask, request, Response
 from vits.index import init_vits_model, generate_audio
 from modules.translate import translate_text
-from modules.audio import transcribe_audio
+from modules.transcribe import transcribe_audio
 from adapter.langchain import get_langchain_response, init_conversation_chain
 
 # env vars will be exported in colab
