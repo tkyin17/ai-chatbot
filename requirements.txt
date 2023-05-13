@@ -19,3 +19,4 @@ faster-whisper==0.4.1
 langchanin==0.0.147
 openai==0.27.4
 deepl==1.14.0
+aspeak==5.2.0

@@ -49,6 +49,7 @@ def init_vits_model():
 def generate_audio(text, speaker_id: int = 324):
     status, audios, time = vits(text, speaker_id)
     wavfile.write(TTS_WAV_PATH, audios[0], audios[1])
+    # print(time)
 
 
 def vits(

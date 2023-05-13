@@ -10,6 +10,8 @@ from modules.prompt import get_prompt
 from modules.translate import translate_text
 from modules.transcribe import transcribe_audio
 
+# from modules.azure_tts import generate_audio
+
 load_dotenv()
 
 MODEL_NAME = getenv("MODEL_NAME")
