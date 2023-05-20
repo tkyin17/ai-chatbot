@@ -1,6 +1,6 @@
 __pycache__/
 src/vits_model/G_953000.pth
-src/whisper_model/model.bin
+src/whisper_model/**/model.bin
 subtitle.txt
 input.wav
 tts.wav
